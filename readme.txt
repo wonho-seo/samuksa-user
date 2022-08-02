@@ -20,8 +20,8 @@ DB 테이블 : user/user.mwb
          ex) eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzamRsIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNjU5NDUwMjI1LCJleHAiOjE2NTk0NTM4MjV9._d2T0fq-5SsiBgcfzd7RO7kRSkTILXXlWklaATupbN4
 
         이 jwt토큰값을 헤더에 넣으면 앞으로 아이디 비밀번호를 body에 적지않아도 로그인 상태 유지
-        ex) /user/test , /user/user_info , /user/user_delete 는     1. jwt토큰을 헤더에 넣거나         넣을시 작동 아니면 /user/login을 호출
-                                                                    2. body에 아이디 비밀번호를         
+        ex) /user/test , /user/user_info , /user/user_delete 는     (1. jwt토큰을 헤더에 넣거나 , 2. body에 아이디 비밀번호를 )  넣을시 작동 아니면 /user/login을 호출하여 로그인 유도
+                                                                            
 
 회원탈퇴 : http://localhost:8080/user/user_delete
           변수 :  없음
