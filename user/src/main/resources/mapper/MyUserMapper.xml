@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.samuksa.user.mapper.UserMapper">
+
+    <select id="getUserAccount" parameterType="String" resultType="com.samuksa.user.dto.security.CustomUserDetails">
+        SELECT CUST_USER_IDX  AS CUST_USER_IDX
+        ,   USER_EMAIL        AS USER_EMAIL
+        ,   USER_ID         AS USER_ID
+        ,   USER_PASSWORD   AS USER_PASSWORD
+        ,   USER_NAME       AS USER_NAME
+        ,   USER_AUTH       AS USER_AUTH
+        FROM CUST_USER
+        WHERE USER_ID = #{USER_ID}
+    </select>
+
+    <insert id="saveUser" parameterType="com.samuksa.user.dto.security.CustomUserDetails">
+        INSERT INTO CUST_USER(USER_ID, USER_PASSWORD, USER_EMAIL, USER_NAME, USER_AUTH) VALUE ( #{userId}, #{userPassword},#{userEmail}, #{userName}, #{userAuth})
+    </insert>
+
+    <delete id="deleteUser" parameterType="String">
+        DELETE FROM CUST_USER WHERE USER_ID = #{USER_ID}
+    </delete>
+</mapper>
