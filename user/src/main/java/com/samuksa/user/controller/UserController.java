@@ -45,6 +45,15 @@ public class UserController {
         return jwtTokenProvider.createToken(userDetails.getUsername(),userDetails.getAuthorities());
     }
 
+    @PostMapping("/signUp/isHaveId")
+    public boolean isHaveId(@RequestParam(name = "userId") String userId){
+        return userMapper.getUserAccount(userId) != null;
+    }
+
+    @PostMapping("/signUp/isHaveName")
+    public boolean isHaveName(@RequestParam(name = "userName") String userName){
+        return userMapper.getUserAccount(userName) != null;
+    }
     @PostMapping("/signUp")
     public  String signUp(@RequestParam(name = "userId") String userId, @RequestParam(name = "passwd") String passwd
             , @RequestParam(name = "userEmail") String userEmail, @RequestParam(name = "userName") String userName){
@@ -70,8 +79,7 @@ public class UserController {
     @PostMapping("/user_info")
     public CustomUserDetails getUserInfo() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        CustomUserDetails customUserDetails = userMapper.getUserAccount(userId);
-        return customUserDetails;
+        return userMapper.getUserAccount(userId);
     }
 
     @PostMapping("/user_delete")
