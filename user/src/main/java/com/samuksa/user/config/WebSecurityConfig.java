@@ -26,6 +26,9 @@ import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.ServletException;
@@ -72,25 +75,26 @@ public class WebSecurityConfig {
         http
                 .authorizeRequests()
                     .antMatchers("/*/signUp", "/user/login", "/user/login/*").permitAll()
-                .antMatchers("/user/*").hasRole("USER")
-        .anyRequest().permitAll()
+                    .antMatchers("/user/*").hasRole("USER")
+                    .anyRequest().permitAll()
                 .and()
                     .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-                http
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                     .formLogin()
                         .loginPage("/user/login")
-                    .usernameParameter("userId")
-                    .passwordParameter("passwd")
+                        .usernameParameter("userId")
+                        .passwordParameter("passwd")
                         .defaultSuccessUrl("/user/user_access")
-                    .failureUrl("/user/access_denied")
+                        .failureUrl("/user/access_denied")
                 .and()
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                     .logoutSuccessUrl("/")
                     .invalidateHttpSession(true)
-                ;
+
+                .and()
+                    .cors();
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,this.passwordEncoder(),userMapper), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -107,5 +111,19 @@ public class WebSecurityConfig {
 
     private boolean isNotMatches(String password, String encodePassword) {
         return !this.passwordEncoder().matches(password, encodePassword);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
