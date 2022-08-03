@@ -58,7 +58,7 @@ public class UserController {
     public  String signUp(@RequestParam(name = "userId") String userId, @RequestParam(name = "passwd") String passwd
             , @RequestParam(name = "userEmail") String userEmail, @RequestParam(name = "userName") String userName){
         CustomUserDetails customUserDetailsDb = userMapper.getUserAccount(userId);
-        if (customUserDetailsDb.getUserId().equals(userId))
+        if (customUserDetailsDb != null)
             return "가입된 id";
 
         CustomUserDetails customUserDetails = new CustomUserDetails();
