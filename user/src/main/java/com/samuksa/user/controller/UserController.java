@@ -15,16 +15,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletRequest;
-import javax.sql.DataSource;
-import java.security.Principal;
-import java.sql.Connection;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -39,10 +33,19 @@ public class UserController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+
     @GetMapping("/login")
-    public String login(@RequestParam(name = "userId") String userId){
+    public String login(@RequestParam(name = "userId") String userId, @RequestParam(name = "passwd") String passWd){
         UserDetails userDetails = userService.loadUserByUsername(userId);
-        return jwtTokenProvider.createToken(userDetails.getUsername(),userDetails.getAuthorities());
+        if (userDetails == null)
+            return "없는 아이디";
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if (bCryptPasswordEncoder.matches(passWd, userDetails.getPassword())){
+            System.out.println(userDetails.getUsername());
+            return jwtTokenProvider.createToken(userDetails.getUsername(),userDetails.getAuthorities());
+        }
+        else
+            return "비밀번호가 틀립니다";
     }
 
     @PostMapping("/signUp/isHaveId")

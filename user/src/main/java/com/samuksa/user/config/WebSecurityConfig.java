@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -87,16 +88,12 @@ public class WebSecurityConfig {
                         .passwordParameter("passwd")
                         .defaultSuccessUrl("/user/user_access")
                         .failureUrl("/user/access_denied")
-                .and()
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true)
 
                 .and()
                     .cors();
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,this.passwordEncoder(),userMapper), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,this.passwordEncoder()), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -109,9 +106,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private boolean isNotMatches(String password, String encodePassword) {
-        return !this.passwordEncoder().matches(password, encodePassword);
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
