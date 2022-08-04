@@ -1,5 +1,6 @@
 package com.samuksa.user.config.jwt;
 
+import com.samuksa.user.config.MyAuthenticationProvider;
 import com.samuksa.user.dto.security.CustomUserDetails;
 import com.samuksa.user.mapper.UserMapper;
 import com.samuksa.user.service.user.UserService;
@@ -27,7 +28,6 @@ import java.security.Principal;
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
