@@ -2,7 +2,6 @@ package com.samuksa.user.config;
 
 import com.samuksa.user.config.jwt.JwtAuthenticationFilter;
 import com.samuksa.user.config.jwt.JwtTokenProvider;
-import com.samuksa.user.dto.security.CustomUserDetails;
 import com.samuksa.user.mapper.UserMapper;
 import com.samuksa.user.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,30 +13,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.security.Principal;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -89,6 +73,7 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/user/user_access")
                         .failureUrl("/user/access_denied")
 
+
                 .and()
                     .cors();
         http
@@ -96,11 +81,11 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
     @Bean
     public UserDetailsService userDetailsService(){
-        return new UserService(userMapper);
+        return this.userService;
     }
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
