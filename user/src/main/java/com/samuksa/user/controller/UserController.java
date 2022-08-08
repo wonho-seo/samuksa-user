@@ -39,12 +39,12 @@ public class UserController {
         return userAthService.getJwtToken(userBasicInfo);
     }
 
-    @PostMapping("/signUp/isHaveId")
+    @PostMapping("/signUp/existence-id")
     public boolean isHaveId(@RequestParam(name = "userId") String userId){
         return userMapper.getUserAccount(userId) != null;
     }
 
-    @PostMapping("/signUp/isHaveName")
+    @PostMapping("/signUp/existence-name")
     public boolean isHaveName(@RequestParam(name = "userName") String userName){
         return userMapper.getUserAccount(userName) != null;
     }
@@ -66,17 +66,17 @@ public class UserController {
         return "test 통과";
     }
 
-    @PostMapping("/user_info")
+    @PostMapping("/user-info")
     public UserBasicInfo getUserInfo() {
         return userAthService.getUserInfo();
     }
 
-    @PostMapping("/user_delete")
+    @DeleteMapping("/user-info")
     public String userDelete() {
         userAthService.userDelete();
         return "success remove";
     }
-    @PostMapping("/access_denied")
+    @PostMapping("/access-denied")
     public String accessDenied(){
         return "access_denied";
     }
