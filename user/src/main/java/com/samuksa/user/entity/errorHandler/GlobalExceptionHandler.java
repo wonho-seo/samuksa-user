@@ -2,8 +2,10 @@ package com.samuksa.user.entity.errorHandler;
 
 import com.samuksa.user.dto.error.ErrorResponse;
 import com.samuksa.user.entity.errorHandler.db.DbException;
+import com.samuksa.user.entity.errorHandler.email.EmailException;
 import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
 import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.entity.errorHandler.signup.SignupException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +20,32 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCustomJwtException(CustomJwtException ex){
         log.error("jwtErrorException",ex);
         ErrorResponse response = new ErrorResponse(ex.getJwtErrorCode());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(ex.getJwtErrorCode().getCode()).body(response);
     }
 
     @ExceptionHandler(DbException.class)
     public ResponseEntity<ErrorResponse> handleDbException(DbException ex){
         log.error("DBException",ex);
         ErrorResponse response = new ErrorResponse(ex.getDbErrorCode());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(ex.getDbErrorCode().getCode()).body(response);
+    }
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<ErrorResponse> handleEmailException(EmailException ex){
+        log.error("EmialException",ex);
+        ErrorResponse response = new ErrorResponse(ex.getEmailErrorCode());
+        return ResponseEntity.status(ex.getEmailErrorCode().getCode()).body(response);
+    }
+    @ExceptionHandler(SignupException.class)
+    public ResponseEntity<ErrorResponse> handleSignupException(SignupException ex){
+        log.error("SignupException",ex);
+        ErrorResponse response = new ErrorResponse(ex.getSignupErrorCode());
+        return ResponseEntity.status(ex.getSignupErrorCode().getCode()).body(response);
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         log.error("handleException",ex);
-        ErrorResponse response = new ErrorResponse(JwtErrorCode.INTER_SERVER_ERROR);
+        ErrorResponse response = new ErrorResponse(JwtErrorCode.UNKNOWN_ERROR);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

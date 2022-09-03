@@ -6,8 +6,9 @@ import lombok.*;
 @Setter
 @Getter
 public class UserBasicInfo {
+    private int userIdx;
     private String userId;
     private String passWd;
-    private String userNikName;
+    private String userNickName;
     private String userEmail;
 }

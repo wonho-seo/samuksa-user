@@ -1,5 +1,11 @@
 package com.samuksa.user.config.jwt;
 
+import com.samuksa.user.dto.user.db.UserJwtToken;
+import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
+import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.mapper.UserMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,16 +25,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final PasswordEncoder passwordEncoder;
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request,"X-AUTH-TOKEN");
         // 유효한 토큰인지 확인합니다.
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-
-            System.out.println(jwtTokenProvider.getAuthentication(token));
+        if (token != null && jwtTokenProvider.validateToken(token,(HttpServletRequest)request)) {
             // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옵니다.
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             // SecurityContext 에 Authentication 객체를 저장합니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         filterChain.doFilter(request, response);
     }
 

@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails{
     private String userId;
     private String userPassword;
     private String userEmail;
-    private String userNikName;
+    private String userNickName;
     private String userAuth;
 
     private boolean emailVerified;	//이메일 인증 여부
