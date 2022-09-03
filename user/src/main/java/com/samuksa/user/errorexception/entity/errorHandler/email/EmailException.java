@@ -1,4 +1,4 @@
-package com.samuksa.user.entity.errorHandler.email;
+package com.samuksa.user.errorexception.entity.errorHandler.email;
 
 import lombok.Getter;
 

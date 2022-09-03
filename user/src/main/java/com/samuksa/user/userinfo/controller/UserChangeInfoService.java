@@ -1,13 +1,13 @@
-package com.samuksa.user.changeinfo.controller;
+package com.samuksa.user.userinfo.controller;
 
-import com.samuksa.user.changeinfo.dto.request.UserInfoChangeRequest;
+import com.samuksa.user.userinfo.dto.request.UserInfoChangeRequest;
 import com.samuksa.user.dto.user.UserBasicInfo;
 import com.samuksa.user.service.user.UserAthService;
+import com.samuksa.user.userinfo.service.InfoService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
 import javax.validation.Valid;
 
@@ -17,6 +17,7 @@ import javax.validation.Valid;
 public class UserChangeInfoService {
 
     private final UserAthService userAthService;
+    private final InfoService infoService;
 
     @DeleteMapping("/user-info")
     @ApiOperation(value = "회원탈퇴", notes = "회원탈퇴, 아이디 패스워드 필요" )
@@ -36,9 +37,10 @@ public class UserChangeInfoService {
         return  ResponseEntity.status(200).body(userAthService.getUserInfo());
     }
 
-//    @GetMapping("/user-info/a")
-//    @ApiOperation(value = "회원정보수정", notes = "회원정보 수정" )
-//    public ResponseEntity<UserInfoChangeRequest> changeInfo(final @Valid @RequestBody UserInfoChangeRequest userInfoChangeRequest) {
-//        return ResponseEntity.status(200).body(userInfoChangeRequest);
-//    }
+    @GetMapping("/user-info/a")
+    @ApiOperation(value = "회원정보수정", notes = "회원정보 수정" )
+    public ResponseEntity<String> changeInfo(final @RequestBody @Valid UserInfoChangeRequest userInfoChangeRequest) {
+        infoService.changeuserInfo(userInfoChangeRequest);
+        return ResponseEntity.status(200).body("success");
+    }
 }

@@ -1,11 +1,5 @@
 package com.samuksa.user.config.jwt;
 
-import com.samuksa.user.dto.user.db.UserJwtToken;
-import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
-import com.samuksa.user.mapper.UserMapper;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

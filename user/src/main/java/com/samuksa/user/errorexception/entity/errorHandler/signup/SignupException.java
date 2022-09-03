@@ -1,4 +1,4 @@
-package com.samuksa.user.entity.errorHandler.signup;
+package com.samuksa.user.errorexception.entity.errorHandler.signup;
 
 import lombok.Getter;
 

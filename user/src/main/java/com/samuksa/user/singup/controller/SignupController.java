@@ -1,4 +1,4 @@
-package com.samuksa.user.controller;
+package com.samuksa.user.singup.controller;
 
 import com.samuksa.user.dto.user.UserBasicInfo;
 import com.samuksa.user.mapper.UserMapper;

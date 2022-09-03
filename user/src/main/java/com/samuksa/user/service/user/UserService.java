@@ -1,14 +1,13 @@
 package com.samuksa.user.service.user;
 
 import com.samuksa.user.entity.db.jwt.CustomUserDetails;
-import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.CustomJwtException;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
 import com.samuksa.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

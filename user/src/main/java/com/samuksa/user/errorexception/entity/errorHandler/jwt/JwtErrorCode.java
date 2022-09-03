@@ -1,4 +1,4 @@
-package com.samuksa.user.entity.errorHandler.jwt;
+package com.samuksa.user.errorexception.entity.errorHandler.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

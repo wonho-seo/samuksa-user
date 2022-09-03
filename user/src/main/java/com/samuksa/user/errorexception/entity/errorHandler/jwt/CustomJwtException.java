@@ -1,6 +1,5 @@
-package com.samuksa.user.entity.errorHandler.jwt;
+package com.samuksa.user.errorexception.entity.errorHandler.jwt;
 
-import io.jsonwebtoken.JwtException;
 import lombok.Getter;
 
 @Getter

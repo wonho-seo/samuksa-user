@@ -29,8 +29,6 @@ import javax.sql.DataSource;
 @Configuration
 public class WebSecurityConfig {
 
-    private final DataSource dataSource;
-    private final UserMapper userMapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     @Bean

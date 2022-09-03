@@ -1,4 +1,4 @@
-package com.samuksa.user.entity.errorHandler.db;
+package com.samuksa.user.errorexception.entity.errorHandler.db;
 
 import lombok.Getter;
 

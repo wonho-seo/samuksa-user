@@ -1,8 +1,7 @@
 package com.samuksa.user.config.jwt;
 
 import com.samuksa.user.dto.user.db.UserJwtToken;
-import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
 import com.samuksa.user.mapper.UserMapper;
 import com.samuksa.user.service.user.UserService;
 import io.jsonwebtoken.*;

@@ -1,14 +1,15 @@
-package com.samuksa.user.entity.errorHandler;
+package com.samuksa.user.errorexception.service;
 
-import com.samuksa.user.dto.error.ErrorResponse;
-import com.samuksa.user.entity.errorHandler.db.DbException;
-import com.samuksa.user.entity.errorHandler.email.EmailException;
-import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
-import com.samuksa.user.entity.errorHandler.signup.SignupException;
+import com.samuksa.user.errorexception.dto.ErrorResponse;
+import com.samuksa.user.errorexception.entity.errorHandler.db.DbException;
+import com.samuksa.user.errorexception.entity.errorHandler.email.EmailException;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.CustomJwtException;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.errorexception.entity.errorHandler.signup.SignupException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -48,4 +49,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+        ErrorResponse response = new ErrorResponse(ex);
+        return ResponseEntity.status(response.getCode()).body(response);
+    }
 }

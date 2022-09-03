@@ -1,17 +1,12 @@
 package com.samuksa.user.service.user.email;
 
 import com.samuksa.user.dto.email.auth.EmailAuth;
-import com.samuksa.user.entity.errorHandler.email.EmailErrorCode;
-import com.samuksa.user.entity.errorHandler.email.EmailException;
 import com.samuksa.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;

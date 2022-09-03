@@ -1,8 +1,6 @@
 package com.samuksa.user.config.jwt;
 
-import com.samuksa.user.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.entity.errorHandler.jwt.JwtErrorCode;
-import io.jsonwebtoken.JwtException;
+import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
