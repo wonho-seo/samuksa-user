@@ -7,7 +7,7 @@
         ,   USER_EMAIL        AS USER_EMAIL
         ,   USER_ID         AS USER_ID
         ,   USER_PASSWORD   AS USER_PASSWORD
-        ,   USER_NAME       AS USER_NIKNAME
+        ,   USER_NAME       AS USER_NICKNAME
         ,   USER_AUTH       AS USER_AUTH
         FROM CUST_USER
         WHERE USER_ID = #{USER_ID}
@@ -25,11 +25,76 @@
         WHERE USER_NAME = #{USER_NAME}
     </select>
 
+    <select id="getEmailKey" parameterType="String" resultType="com.samuksa.user.dto.email.auth.EmailAuth">
+        SELECT AUTH_EMAIL_MAIL AS EMAIL
+        ,AUTH_EMAIL_KEY AS AUTHKEY
+        ,AUTH_EMAIL_AUTH AS AUTH
+        FROM AUTH_EMAIL
+        WHERE AUTH_EMAIL_MAIL = #{EMAIL}
+    </select>
+
     <insert id="saveUser" parameterType="com.samuksa.user.entity.db.jwt.CustomUserDetails">
-        INSERT INTO CUST_USER(USER_ID, USER_PASSWORD, USER_EMAIL, USER_NAME, USER_AUTH) VALUE ( #{userId}, #{userPassword},#{userEmail}, #{userNikName}, #{userAuth})
+        INSERT INTO CUST_USER(USER_ID, USER_PASSWORD, USER_EMAIL, USER_NAME, USER_AUTH) VALUE (#{userId}, #{userPassword}, #{userEmail}, #{userNickName}, #{userAuth})
+    </insert>
+
+    <update id="changeEmailKey" parameterType="String">
+        UPDATE AUTH_EMAIL
+        SET AUTH_EMAIL_KEY = #{KEY}
+        WHERE AUTH_EMAIL_MAIL = #{EMAIL}
+    </update>
+
+    <insert id="saveEmailKey" parameterType="String">
+        INSERT INTO AUTH_EMAIL(AUTH_EMAIL_MAIL, AUTH_EMAIL_KEY, AUTH_EMAIL_AUTH) VALUE(#{EMAIL}, #{KEY}, 0)
     </insert>
 
     <delete id="deleteUser" parameterType="String">
-        DELETE FROM CUST_USER WHERE USER_ID = #{USER_ID}
+        DELETE UJT, CU
+        FROM USER_JWT_TOKEN AS UJT INNER JOIN CUST_USER AS CU
+        ON UJT.CUST_USER_CUST_USER_IDX = CU.CUST_USER_IDX
+        WHERE CU.USER_ID = #{USER_ID}
     </delete>
+
+    <insert id="saveJwtToken" parameterType="String">
+        INSERT INTO USER_JWT_TOKEN(USER_JWT_ACCESS_TOKEN, USER_JWT_REFRESH_TOKEN, CUST_USER_CUST_USER_IDX)
+        VALUE(#{ATOKEN}, #{RTOKEN}, (SELECT CUST_USER_IDX FROM CUST_USER WHERE USER_ID = #{USER_ID} LIMIT 1));
+    </insert>
+
+    <select id="getJwtToken" parameterType="String" resultType="com.samuksa.user.dto.user.db.UserJwtToken">
+        SELECT UJT.USER_JWT_TOKEN_IDX AS JWTTOKENIDX
+        ,UJT.USER_JWT_REFRESH_TOKEN AS REFRESHTOKEN
+        ,UJT.USER_JWT_ACCESS_TOKEN AS ACCESSTOKEN
+        ,CU.USER_ID AS USERID
+        FROM CUST_USER CU
+        ,USER_JWT_TOKEN UJT
+        WHERE UJT.CUST_USER_CUST_USER_IDX = CU.CUST_USER_IDX
+        AND UJT.USER_JWT_ACCESS_TOKEN = #{ATOKEN}
+    </select>
+
+    <select id="getJwtTokenByUserId" parameterType="String" resultType="com.samuksa.user.dto.user.db.UserJwtToken">
+        SELECT UJT.USER_JWT_TOKEN_IDX AS JWTTOKENIDX
+        ,UJT.USER_JWT_REFRESH_TOKEN AS REFRESHTOKEN
+        ,UJT.USER_JWT_ACCESS_TOKEN AS ACCESSTOKEN
+        ,CU.USER_ID AS USERID
+        FROM CUST_USER CU
+        ,USER_JWT_TOKEN UJT
+        WHERE UJT.CUST_USER_CUST_USER_IDX = CU.CUST_USER_IDX
+        AND CU.USER_ID = #{USER_ID}
+    </select>
+
+    <update id="changeJwtToken" parameterType="String">
+        UPDATE USER_JWT_TOKEN
+        SET USER_JWT_ACCESS_TOKEN = #{ATOKEN}
+        ,USER_JWT_REFRESH_TOKEN = #{NRTOKEN}
+        WHERE USER_JWT_REFRESH_TOKEN = #{ORTOKEN}
+    </update>
+
+    <delete id="deleteJwtToken" parameterType="String">
+        DELETE FROM USER_JWT_TOKEN WHERE USER_JWT_ACCESS_TOKEN = #{ATOKEN}
+    </delete>
+
+    <update id="successAuthEmail" parameterType="String">
+        UPDATE AUTH_EMAIL
+        SET AUTH_EMAIL_AUTH = 1
+        WHERE AUTH_EMAIL_MAIL = #{EMAIL}
+    </update>
 </mapper>

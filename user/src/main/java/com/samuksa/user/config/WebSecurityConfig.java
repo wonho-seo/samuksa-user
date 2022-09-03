@@ -1,5 +1,6 @@
 package com.samuksa.user.config;
 
+import com.samuksa.user.config.jwt.JwtAuthenticationEntryPoint;
 import com.samuksa.user.config.jwt.JwtAuthenticationFilter;
 import com.samuksa.user.config.jwt.JwtTokenProvider;
 import com.samuksa.user.mapper.UserMapper;
@@ -59,7 +60,7 @@ public class WebSecurityConfig {
 
         http
                 .authorizeRequests()
-                    .antMatchers("/*/signUp", "/user/login", "/user/login/*").permitAll()
+                    .antMatchers("/*/signup", "/user/login", "/user/login/*","/user/signup/message", "/*/refresh-token").permitAll()
                     .antMatchers("/user/*").hasRole("USER")
                     .anyRequest().permitAll()
                 .and()
@@ -67,13 +68,13 @@ public class WebSecurityConfig {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .formLogin()
-                        .loginPage("/user/login")
                         .usernameParameter("userId")
                         .passwordParameter("passwd")
                         .defaultSuccessUrl("/user/user_access")
                         .failureUrl("/user/access_denied")
-
-
+                .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .and()
                     .cors();
         http
