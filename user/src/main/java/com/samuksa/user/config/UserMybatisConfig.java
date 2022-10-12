@@ -16,18 +16,14 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(value = "com.samuksa.user")
+@MapperScan(value = "com.samuksa.user.config.security.mapper", sqlSessionTemplateRef = "UserSessionTemplate")
 public class UserMybatisConfig {
 
-    @Value("${spring.datasource.mapper-locations}")
+    @Value("${spring.samuksa-user-db-datasource.usermapperlocations}")
     String mPath;
 
-    @Bean(name = "UserDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource DataSource() { return DataSourceBuilder.create().build(); }
-
     @Bean(name = "UserSqlSessionFactory")
-    public SqlSessionFactory SqlSessionFactory(@Qualifier("UserDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory SqlSessionFactory(@Qualifier("SamuksaUserDbDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource(mPath));

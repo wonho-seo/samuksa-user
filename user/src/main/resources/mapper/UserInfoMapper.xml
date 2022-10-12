@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.samuksa.user.domain.userinfo.mapper.InfoMapper">
+
+    <select id="getUserAccount" parameterType="String" resultType="com.samuksa.user.config.security.entity.CustomUserDetails">
+        SELECT CUST_USER_IDX  AS CUST_USER_IDX
+        ,   USER_EMAIL        AS USER_EMAIL
+        ,   USER_ID         AS USER_ID
+        ,   USER_PASSWORD   AS USER_PASSWORD
+        ,   USER_NAME       AS USER_NICKNAME
+        ,   USER_AUTH       AS USER_AUTH
+        FROM CUST_USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <delete id="deleteUserInfo" parameterType="String">
+        DELETE UJT, CU
+        FROM USER_JWT_TOKEN AS UJT INNER JOIN CUST_USER AS CU
+        ON UJT.CUST_USER_IDX = CU.CUST_USER_IDX
+        WHERE CU.USER_ID = #{USER_ID}
+    </delete>
+    <update id="changePassWord" parameterType="String">
+        UPDATE CUST_USER
+        SET USER_PASSWORD = #{newPassWord}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="changeNickName" parameterType="String">
+        UPDATE CUST_USER
+        SET USER_NAME = #{nickName}
+        WHERE USER_ID = #{userId}
+    </update>
+</mapper>
