@@ -18,10 +18,8 @@ public class TestDb {
     @Test
     public void testConnection()throws Exception {
         Class.forName(DRIVER);
-        System.out.println(123);
         try {
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println(connection);
         }
         catch (Exception e) {
             e.printStackTrace();
