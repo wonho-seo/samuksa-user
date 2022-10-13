@@ -1,8 +1,6 @@
 package com.samuksa.user.db.table.samuksa_user_db.entity;
 
-import com.samuksa.user.annotation.anno.UserPassword;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

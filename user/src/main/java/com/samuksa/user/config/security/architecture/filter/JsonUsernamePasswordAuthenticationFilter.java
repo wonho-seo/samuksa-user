@@ -55,8 +55,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
                 response.setContentType("application/json");
                 response.setCharacterEncoding("utf-8");
 
-                response.addHeader("Refresh Toekn", jwtTokenProvider.createRefreshToken(authentication.getName(),authentication.getAuthorities()));
-                response.addHeader("Access Token", jwtTokenProvider.createToken(authentication.getName(),authentication.getAuthorities()));
+                response.addHeader("Refresh-Token", jwtTokenProvider.createRefreshToken(authentication.getName(),authentication.getAuthorities()));
+                response.addHeader("Access-Token", jwtTokenProvider.createToken(authentication.getName(),authentication.getAuthorities()));
 
             }
         });

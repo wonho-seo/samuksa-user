@@ -92,8 +92,8 @@ public class WebSecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedOriginPattern("*");
         configuration.setAllowCredentials(true);
-        configuration.addExposedHeader("Refresh Token");
-        configuration.addExposedHeader("Access Token");
+        configuration.addExposedHeader("Refresh-Token");
+        configuration.addExposedHeader("Access-Token");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
