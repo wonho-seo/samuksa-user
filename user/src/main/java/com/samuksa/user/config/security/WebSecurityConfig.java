@@ -2,7 +2,6 @@ package com.samuksa.user.config.security;
 
 import com.samuksa.user.config.security.architecture.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.samuksa.user.config.security.architecture.filter.JwtAuthenticationFilter;
-import com.samuksa.user.config.security.architecture.manager.UserAuthenticationManager;
 import com.samuksa.user.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.samuksa.user.config.security.jwt.JwtTokenProvider;
 import com.samuksa.user.config.security.oauth2.service.CustomOAuth2UserService;
@@ -29,7 +28,6 @@ public class WebSecurityConfig {
     private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final UserAuthenticationManager userAuthenticationManager;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -94,6 +92,8 @@ public class WebSecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedOriginPattern("*");
         configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Refresh Token");
+        configuration.addExposedHeader("Access Token");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
