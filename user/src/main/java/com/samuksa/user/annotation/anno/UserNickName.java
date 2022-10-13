@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UserNickName {
 
-    String regexp() default "^[a-zA-Z0-9]{4,12}$";
+    String regexp() default "^[ㄱ-ㅎ가-힣a-zA-Z0-9]{4,12}$";
 
     boolean nullable() default false;
 
