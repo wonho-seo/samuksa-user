@@ -38,8 +38,8 @@ public class LoginService {
             return ResponseEntity.status(400).body(jsonObject.toString());
         }
         UserJwtToken userJwtToken = getUserJwtTokenResponse(custUser);
-        jsonObject.put("AccessToken", userJwtToken.getUserJwtAccessToken());
-        return ResponseEntity.status(200).header("RefreshToken", userJwtToken.getUserJwtRefreshToken())
+        jsonObject.put("Access-Token", userJwtToken.getUserJwtAccessToken());
+        return ResponseEntity.status(200).header("Refresh-Token", userJwtToken.getUserJwtRefreshToken())
                 .body(jsonObject.toString());
     }
 
