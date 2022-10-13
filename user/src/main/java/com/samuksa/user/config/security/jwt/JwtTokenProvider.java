@@ -77,7 +77,8 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String jwtToken, HttpServletRequest request) {
         try {
-            if (jwtToken == null || !userJwtTokenRepository.existsByuserJwtAccessToken(jwtToken))
+//            if (jwtToken == null || !userJwtTokenRepository.existsByuserJwtAccessToken(jwtToken))
+            if (jwtToken == null)
                 throw new JwtException("");
             Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());

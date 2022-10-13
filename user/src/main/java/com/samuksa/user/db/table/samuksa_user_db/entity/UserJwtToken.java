@@ -23,7 +23,7 @@ public class UserJwtToken{
     private String userJwtAccessToken;
 
     @OneToOne
-    @MapsId
+    @MapsId("cust_user_idx")
     @JoinColumn(name = "cust_user_idx")
     private CustUser custUser;
 }
