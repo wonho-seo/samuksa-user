@@ -29,8 +29,6 @@ public class CustUser {
     private String userPassword;
     @Column(name = "user_email")
     private String email;
-    @Column(name = "user_name")
-    private String name;
     @Column(name = "user_nick_name")
     private String nickName;
     @Column(name = "user_auth")
