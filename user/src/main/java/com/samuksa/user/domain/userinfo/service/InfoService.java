@@ -84,11 +84,10 @@ public class InfoService {
 
     public ResponseEntity<String> uploadImage(List<MultipartFile> multipartFiles){
         if (multipartFiles.size() != 1)
-            return ResponseEntity.badRequest().body("많은 이미지");
+            return ResponseEntity.badRequest().body("1개의 이미지만 넣어주세요");
         for(MultipartFile image : multipartFiles){
             if (image.getContentType().startsWith("image") == false)
                 return ResponseEntity.badRequest().body("이미지가 아님");
-
             String originName = image.getOriginalFilename();
             String fileName = originName.substring(originName.lastIndexOf("."));
             String userId = makeFolder();
