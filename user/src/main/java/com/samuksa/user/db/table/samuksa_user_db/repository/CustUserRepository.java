@@ -8,9 +8,7 @@ public interface CustUserRepository extends JpaRepository<CustUser,Long> {
     CustUser findByemail(String email);
     CustUser findBynickName(String nickName);
     CustUser findByauthentication(String authentication);
-    CustUser findByname(String name);
     boolean existsByUserId(String userId);
     boolean existsByNickName(String nickName);
     boolean existsByEmail(String email);
-    boolean existsByName(String name);
 }

@@ -57,7 +57,6 @@ public class UserSignupServiceImpl {
                 .userId(signupRequest.getUserId())
                 .email(signupRequest.getEmail())
                 .nickName(signupRequest.getNickName())
-                .name(signupRequest.getName())
                 .authentication("ROLE_USER")
                 .userPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()))
                 .build();

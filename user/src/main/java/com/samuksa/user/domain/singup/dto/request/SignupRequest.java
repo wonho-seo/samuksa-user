@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+
 public class SignupRequest {
     @UserId(groups = {SingupAnnoGroup.class})
     private String userId;
@@ -23,9 +24,6 @@ public class SignupRequest {
     @NotNull(groups = {SingupAnnoGroup.class, AuthMessageAnnoGroup.class})
     @Email(groups = {SingupAnnoGroup.class, AuthMessageAnnoGroup.class})
     private String email;
-
-    @NotNull(groups = {SingupAnnoGroup.class})
-    private String name;
 
     @UserNickName(groups = {SingupAnnoGroup.class})
     private String nickName;
