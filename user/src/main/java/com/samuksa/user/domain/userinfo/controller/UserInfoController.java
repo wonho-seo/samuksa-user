@@ -90,7 +90,7 @@ public class UserInfoController {
 
     @PostMapping("/upload-image")
     @ApiOperation(value = "이미지 업로드")
-    public ResponseEntity<String> uploadImage(final @ApiIgnore @RequestParam List<MultipartFile> image){
+    public ResponseEntity<String> uploadImage(final @RequestParam List<MultipartFile> image){
         return infoService.uploadImage(image);
     }
 
