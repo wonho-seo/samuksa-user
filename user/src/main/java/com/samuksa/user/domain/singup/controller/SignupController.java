@@ -21,7 +21,7 @@ public class SignupController {
 
     @GetMapping("/existence-info")
     @ApiOperation(value = "중복확인", notes = "회원가입시 아이디 중복확인")
-    public ResponseEntity<String> existenceInfo(final @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<String> existenceInfo(final SignupRequest signupRequest){
         userSignupService.existence(signupRequest);
         return ResponseEntity.status(200).body("success");
     }
