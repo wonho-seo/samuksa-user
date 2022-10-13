@@ -2,6 +2,10 @@ package com.samuksa.user.config.security.architecture.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samuksa.user.config.security.jwt.JwtTokenProvider;
+import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
+import com.samuksa.user.db.table.samuksa_user_db.entity.UserJwtToken;
+import com.samuksa.user.db.table.samuksa_user_db.repository.CustUserRepository;
+import com.samuksa.user.db.table.samuksa_user_db.repository.UserJwtTokenRepository;
 import com.samuksa.user.domain.login.dto.request.LoginRequest;
 import com.samuksa.user.domain.login.dto.response.UserJwtTokenResponse;
 import com.samuksa.user.domain.login.service.LoginService;
@@ -42,6 +46,10 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private UserJwtTokenRepository userJwtTokenRepository;
+    @Autowired
+    private CustUserRepository custUserRepository;
 
     @Autowired
     public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider
@@ -55,9 +63,15 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
                 response.setContentType("application/json");
                 response.setCharacterEncoding("utf-8");
 
-                response.addHeader("Refresh-Token", jwtTokenProvider.createRefreshToken(authentication.getName(),authentication.getAuthorities()));
-                response.addHeader("Access-Token", jwtTokenProvider.createToken(authentication.getName(),authentication.getAuthorities()));
+                UserJwtToken userJwtToken = UserJwtToken.builder()
+                        .userJwtAccessToken(jwtTokenProvider.createToken(authentication.getName(), authentication.getAuthorities()))
+                        .userJwtRefreshToken(jwtTokenProvider.createRefreshToken(authentication.getName(), authentication.getAuthorities()))
+                        .build();
 
+                response.addHeader("Refresh-Token", userJwtToken.getUserJwtRefreshToken());
+                response.addHeader("Access-Token", userJwtToken.getUserJwtAccessToken());
+
+//                userJwtTokenRepository.save(userJwtToken);
             }
         });
     }
@@ -74,7 +88,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         LoginDto loginDto = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8), LoginDto.class);
         String username = loginDto.getUserId();
         String password = loginDto.getPassword();
-        if(username ==null || password == null){
+        if (username == null || password == null) {
             throw new AuthenticationServiceException("DATA IS MISS");
         }
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
@@ -84,16 +98,13 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     }
 
 
-
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 
 
-
-
     @Data
-    private static class LoginDto{
+    private static class LoginDto {
         String userId;
         String password;
     }

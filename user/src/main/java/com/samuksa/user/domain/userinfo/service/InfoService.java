@@ -54,16 +54,17 @@ public class InfoService {
     }
 
     public GetUserInfoResponse getUserInfo(){
-        UserJwtToken userJwtToken = userJwtTokenRepository.findByCustUser_userId(SecurityContextHolder.getContext().getAuthentication().getName());
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        CustUser custUser = custUserRepository.findByuserId(userId);
         UserImage userImage = userImageRepository.findByCustUser_userId(SecurityContextHolder.getContext().getAuthentication().getName());
         if (userImage.getProfilePath() == null)
             userImage.setProfilePath(defaultPath + File.separator + "defaultprofileimage.png");
         File file = new File(userImage.getProfilePath());
         try {
             return GetUserInfoResponse.builder()
-                    .userId(userJwtToken.getCustUser().getUserId())
-                    .email(userJwtToken.getCustUser().getEmail())
-                    .nickName(userJwtToken.getCustUser().getNickName())
+                    .userId(custUser.getUserId())
+                    .email(custUser.getEmail())
+                    .nickName(custUser.getNickName())
                     .profileImage(FileUtil.readAsByteArray(file))
                     .build();
         }

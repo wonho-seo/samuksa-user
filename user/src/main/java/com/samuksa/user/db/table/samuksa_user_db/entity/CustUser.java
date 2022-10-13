@@ -36,9 +36,9 @@ public class CustUser {
     @PrimaryKeyJoinColumn
     private UserJwtToken userJwtToken;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "custUser")
-    @PrimaryKeyJoinColumn
-    private UserImage userImage;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "custUser")
+//    @PrimaryKeyJoinColumn
+//    private UserImage userImage;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.authentication));
