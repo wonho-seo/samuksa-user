@@ -35,7 +35,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
     }
 
     private boolean isNotMatches(String password, String encodePassword) {
-        return passwordEncoder().matches(password, encodePassword);
+        return !passwordEncoder().matches(password, encodePassword);
     }
 
     @Bean
