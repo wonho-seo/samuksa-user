@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -15,8 +16,8 @@ public class BoardComment {
     @Column(name = "idx")
     private long idx;
 
-    @Column(name = "board_contents_idx")
-    private long boardContentsIdx;
+    @Column(name = "board_title_idx")
+    private long boardTitleIdx;
 
     @Column(name = "comment_idx")
     private long commentIdx;
@@ -25,8 +26,8 @@ public class BoardComment {
     private String comment;
 
     @Column(name = "m_time")
-    private Date mTime;
+    private Timestamp mTime;
 
     @Column(name = "c_time")
-    private Date cTime;
+    private Timestamp cTime;
 }

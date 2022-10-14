@@ -15,7 +15,7 @@ public class BoardContents {
     @Column(name = "idx")
     private long idx;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "board_title_idx")
     private BoardTitle boardTitle;
 
