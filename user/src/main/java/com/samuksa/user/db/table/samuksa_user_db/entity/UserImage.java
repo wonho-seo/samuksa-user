@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "cust_user")
+@Table(name = "user_image", schema = "samuksa_user_db")
 public class UserImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

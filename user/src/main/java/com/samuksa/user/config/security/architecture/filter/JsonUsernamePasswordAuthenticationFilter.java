@@ -1,6 +1,7 @@
 package com.samuksa.user.config.security.architecture.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.samuksa.user.config.security.architecture.manager.UserAuthenticationManager;
 import com.samuksa.user.config.security.jwt.JwtTokenProvider;
 import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
 import com.samuksa.user.db.table.samuksa_user_db.entity.UserJwtToken;
@@ -50,6 +51,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     private UserJwtTokenRepository userJwtTokenRepository;
     @Autowired
     private CustUserRepository custUserRepository;
+    @Autowired
+    UserAuthenticationManager userAuthenticationManager;
 
     @Autowired
     public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider
@@ -93,7 +96,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
-        return this.getAuthenticationManager().authenticate(authRequest);//getAuthenticationManager를 커스텀해줌
+        System.out.println("   " + userAuthenticationManager.authenticate(authRequest).getName());
+        return userAuthenticationManager.authenticate(authRequest);//getAuthenticationManager를 커스텀해줌
     }
 
 

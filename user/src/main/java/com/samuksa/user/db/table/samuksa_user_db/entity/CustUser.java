@@ -15,7 +15,7 @@ import java.util.Collections;
 @AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(schema = "cust_user")
+@Table(name = "cust_user", schema = "samuksa_user_db")
 public class CustUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

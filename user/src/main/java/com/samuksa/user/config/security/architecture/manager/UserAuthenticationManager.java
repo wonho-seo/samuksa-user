@@ -1,5 +1,6 @@
 package com.samuksa.user.config.security.architecture.manager;
 
+import com.samuksa.user.config.security.base.MyAuthenticationProvider;
 import com.samuksa.user.config.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Component;
 public class UserAuthenticationManager implements AuthenticationManager {
 
     private final UserService userService;
+    private final MyAuthenticationProvider myAuthenticationProvider;
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserDetails userDetails = userService.loadUserByUsername((String) authentication.getName());
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),userDetails.getAuthorities());
+        return myAuthenticationProvider.authenticate(authentication);
     }
 }

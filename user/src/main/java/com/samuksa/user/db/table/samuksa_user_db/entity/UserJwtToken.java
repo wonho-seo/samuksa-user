@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "cust_user")
+@Table(name = "user_jwt_token", schema = "samuksa_user_db")
 public class UserJwtToken{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
