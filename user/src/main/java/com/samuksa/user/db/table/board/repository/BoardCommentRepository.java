@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface BoardCommentRepository extends JpaRepository<BoardComment, Long> {
-    List<BoardComment> findByBoardContentsIdx(long boardContentsIdx);
+    List<BoardComment> findByBoardTitleIdx(long boardTitleIdx);
     List<BoardComment> findByCommentIdx(long commentIdx);
 }

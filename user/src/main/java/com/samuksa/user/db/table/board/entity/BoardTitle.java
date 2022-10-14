@@ -18,8 +18,8 @@ public class BoardTitle {
     @Column(name = "idx")
     private long idx;
 
-    @Column(name = "user_idx")
-    private long userIdx;
+    @Column(name = "user_id")
+    private String userId;
 
     @Column(name = "m_time")
     private Timestamp mTime;
@@ -32,4 +32,7 @@ public class BoardTitle {
 
     @Column(name = "type")
     private int type;
+
+    @Column(name = "recommend_number")
+    private int recommendNumber;
 }
