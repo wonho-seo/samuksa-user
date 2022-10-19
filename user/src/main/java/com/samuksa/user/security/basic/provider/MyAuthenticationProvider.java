@@ -1,6 +1,6 @@
-package com.samuksa.user.config.security.base;
+package com.samuksa.user.security.basic.provider;
 
-import com.samuksa.user.config.security.service.UserService;
+import com.samuksa.user.security.basic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor

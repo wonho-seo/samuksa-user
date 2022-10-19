@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(EmailException.class)
     public ResponseEntity<ErrorResponse> handleEmailException(EmailException ex){
-        log.error("EmialException",ex);
+        log.error("EmailException",ex);
         ErrorResponse response = new ErrorResponse(ex.getEmailErrorCode());
         return ResponseEntity.status(ex.getEmailErrorCode().getCode()).body(response);
     }

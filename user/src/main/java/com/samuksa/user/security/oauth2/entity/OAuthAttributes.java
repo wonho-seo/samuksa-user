@@ -1,4 +1,4 @@
-package com.samuksa.user.config.security.oauth2.entity;
+package com.samuksa.user.security.oauth2.entity;
 
 import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
 import lombok.AllArgsConstructor;

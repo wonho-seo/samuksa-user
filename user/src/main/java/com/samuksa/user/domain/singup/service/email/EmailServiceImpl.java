@@ -2,6 +2,8 @@ package com.samuksa.user.domain.singup.service.email;
 
 import com.samuksa.user.db.table.samuksa_user_db.entity.AuthEmail;
 import com.samuksa.user.db.table.samuksa_user_db.repository.AuthEmailRepository;
+import com.samuksa.user.errorexception.entity.errorHandler.email.EmailErrorCode;
+import com.samuksa.user.errorexception.entity.errorHandler.email.EmailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -79,11 +81,9 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public String sendSimpleMessage(String userEmail)throws Exception {
         MimeMessage message = createMessage(userEmail);
-        AuthEmail authEmail = authEmailRepository.findByauthEmail(userEmail);
-        if(authEmail == null)
-            authEmail = AuthEmail.builder()
-                    .authEmail(userEmail)
-                    .build();
+        AuthEmail authEmail = authEmailRepository.findByauthEmail(userEmail).orElseGet(()-> AuthEmail.builder()
+                .authEmail(userEmail)
+                .build());
         authEmail.setAuth(0);
         authEmail.setAuthKey(this.emailPassword);
         try{
@@ -97,7 +97,7 @@ public class EmailServiceImpl implements EmailService{
     }
 
     public boolean getEmailAuth(String email, String key){
-        AuthEmail authEmail = authEmailRepository.findByauthEmail(email);
+        AuthEmail authEmail = authEmailRepository.findByauthEmail(email).orElseThrow(() -> new EmailException("Not found Email", EmailErrorCode.Wrong_Approach));
         if (authEmail.getAuthKey().equals(key)) {
             authEmail.setAuth(1);
             authEmailRepository.save(authEmail);

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.samuksa.user.config.security.mapper.UserMapper">
 
-    <select id="getUserAccount" parameterType="String" resultType="com.samuksa.user.config.security.entity.CustomUserDetails">
+    <select id="getUserAccount" parameterType="String" resultType="com.samuksa.user.security.basic.entity.CustomUserDetails">
         SELECT CUST_USER_IDX  AS CUST_USER_IDX
         ,   USER_EMAIL        AS USER_EMAIL
         ,   USER_ID         AS USER_ID

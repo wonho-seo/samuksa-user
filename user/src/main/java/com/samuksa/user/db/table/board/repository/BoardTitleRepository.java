@@ -6,9 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardTitleRepository extends JpaRepository<BoardTitle, Long> {
-    List<BoardTitle> findByUserId(String userId);
-    List<BoardTitle> findByType(int type);
-    Page<BoardTitle> findByType(int type, Pageable pageable);
+    Optional<List<BoardTitle>> findByUserIdx(long userIdx);
+    Optional<List<BoardTitle>> findByType(int type);
+    Optional<Page<BoardTitle>> findByType(int type, Pageable pageable);
 }

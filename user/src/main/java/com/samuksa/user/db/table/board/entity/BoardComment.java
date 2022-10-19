@@ -30,4 +30,7 @@ public class BoardComment {
 
     @Column(name = "c_time")
     private Timestamp cTime;
+
+    @Column(name = "user_idx")
+    private long userIdx;
 }

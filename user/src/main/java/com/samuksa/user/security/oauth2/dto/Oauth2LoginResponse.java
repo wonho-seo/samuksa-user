@@ -1,4 +1,4 @@
-package com.samuksa.user.config.security.oauth2.dto;
+package com.samuksa.user.security.oauth2.dto;
 
 import lombok.Builder;
 import lombok.Data;
