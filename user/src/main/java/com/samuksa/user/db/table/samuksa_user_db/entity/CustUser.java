@@ -31,14 +31,12 @@ public class CustUser {
     private String nickName;
     @Column(name = "user_auth")
     private String authentication;
+    @Column(name = "user_profile_image_path")
+    private String profileImagePath;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "custUser")
-    @PrimaryKeyJoinColumn
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn(name = "idx", referencedColumnName = "cust_user_idx")
     private UserJwtToken userJwtToken;
-
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "custUser")
-//    @PrimaryKeyJoinColumn
-//    private UserImage userImage;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.authentication));

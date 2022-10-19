@@ -1,5 +1,6 @@
 package com.samuksa.user.db.table.board.entity;
 
+import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,8 +19,8 @@ public class BoardTitle {
     @Column(name = "idx")
     private long idx;
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "user_idx")
+    private long userIdx;
 
     @Column(name = "m_time")
     private Timestamp mTime;

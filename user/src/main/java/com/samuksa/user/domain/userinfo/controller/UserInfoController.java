@@ -72,25 +72,22 @@ public class UserInfoController {
             ),
             @ApiImplicitParam(
                     name = "newPassword",
-                    required = true,
                     paramType = "body",
                     dataType = "string"
             ),
             @ApiImplicitParam(
                     name = "newNickName",
-                    required = true,
                     paramType = "body",
                     dataType = "string"
             ),
     })
     public ResponseEntity<String> changeInfo(final @ApiIgnore @RequestBody @Validated(ChangeInfoAnnoGroup.class) UserInfoRequest userInfoRequest) {
-        infoService.patchUserInfo(userInfoRequest);
-        return ResponseEntity.status(200).body("success");
+        return infoService.patchUserInfo(userInfoRequest);
     }
 
     @PostMapping("/upload-image")
     @ApiOperation(value = "이미지 업로드")
-    public ResponseEntity<String> uploadImage(final @RequestParam List<MultipartFile> image){
+    public ResponseEntity<String> uploadImage(final @RequestPart MultipartFile image){
         return infoService.uploadImage(image);
     }
 

@@ -1,4 +1,4 @@
-package com.samuksa.user.config.security;
+package com.samuksa.user.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

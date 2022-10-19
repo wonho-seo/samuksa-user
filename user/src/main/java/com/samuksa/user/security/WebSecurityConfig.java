@@ -1,18 +1,15 @@
-package com.samuksa.user.config.security;
+package com.samuksa.user.security;
 
-import com.samuksa.user.config.security.architecture.filter.JsonUsernamePasswordAuthenticationFilter;
-import com.samuksa.user.config.security.architecture.filter.JwtAuthenticationFilter;
-import com.samuksa.user.config.security.jwt.JwtAuthenticationEntryPoint;
-import com.samuksa.user.config.security.jwt.JwtTokenProvider;
-import com.samuksa.user.config.security.oauth2.service.CustomOAuth2UserService;
+import com.samuksa.user.security.basic.filter.JsonUsernamePasswordAuthenticationFilter;
+import com.samuksa.user.security.jwt.filter.JwtAuthenticationFilter;
+import com.samuksa.user.security.jwt.exception.JwtAuthenticationEntryPoint;
+import com.samuksa.user.security.oauth2.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,11 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class WebSecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomOAuth2UserService customOAuth2UserService;
-
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui",
@@ -46,9 +41,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/", "/**").permitAll()
                 .antMatchers( "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/logina").permitAll()
-
-                .antMatchers("/user/*").hasRole("USER")
+                .antMatchers("/user/*","/board/create").hasRole("USER")
                 .and()
                     .csrf().disable()
 //                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -64,25 +57,25 @@ public class WebSecurityConfig {
 //                .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+
                 .and()
                     .cors()
                 .and()
                 .oauth2Login()
+                .redirectionEndpoint()
+                .and()
                 .defaultSuccessUrl("/login/oauth2")
 //                .failureUrl("/login/test")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
+
         ;
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,bCryptPasswordEncoder), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
     }
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        return this.userService;
-//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
@@ -99,5 +92,6 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 }

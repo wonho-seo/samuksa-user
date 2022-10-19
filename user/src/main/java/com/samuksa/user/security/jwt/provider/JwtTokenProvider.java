@@ -1,6 +1,7 @@
-package com.samuksa.user.config.security.jwt;
+package com.samuksa.user.security.jwt.provider;
 
-import com.samuksa.user.config.security.service.UserService;
+import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.samuksa.user.security.basic.service.UserService;
 import com.samuksa.user.db.table.samuksa_user_db.repository.UserJwtTokenRepository;
 import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
 import io.jsonwebtoken.*;
@@ -10,6 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -75,24 +79,10 @@ public class JwtTokenProvider {
         return req.getHeader(name);
     }
 
-    public boolean validateToken(String jwtToken, HttpServletRequest request) {
-        try {
-//            if (jwtToken == null || !userJwtTokenRepository.existsByuserJwtAccessToken(jwtToken))
-            if (jwtToken == null)
-                throw new JwtException("");
-            Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
-        }
-        catch(ExpiredJwtException e){
-            request.setAttribute("exception", JwtErrorCode.TOKEN_TIME_OUT.getMessage());
-        }
-        catch (JwtException e){
-            request.setAttribute("exception", JwtErrorCode.INVALID_TOKEN.getMessage());
-        }
-        catch (Exception e) {
-            request.setAttribute("exception", JwtErrorCode.UNKNOWN_ERROR.getMessage());
-            return false;
-        }
-        return false;
+    public int validateToken(String jwtToken) {
+        if (jwtToken == null || !userJwtTokenRepository.existsByuserJwtAccessToken(jwtToken))
+            throw new UsernameNotFoundException("not found");
+        Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
+        return  claims.getBody().getExpiration().compareTo(new Date());
     }
 }

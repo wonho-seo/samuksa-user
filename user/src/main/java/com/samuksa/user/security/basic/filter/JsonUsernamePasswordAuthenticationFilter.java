@@ -1,15 +1,8 @@
-package com.samuksa.user.config.security.architecture.filter;
+package com.samuksa.user.security.basic.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.samuksa.user.config.security.architecture.manager.UserAuthenticationManager;
-import com.samuksa.user.config.security.jwt.JwtTokenProvider;
-import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
-import com.samuksa.user.db.table.samuksa_user_db.entity.UserJwtToken;
-import com.samuksa.user.db.table.samuksa_user_db.repository.CustUserRepository;
-import com.samuksa.user.db.table.samuksa_user_db.repository.UserJwtTokenRepository;
-import com.samuksa.user.domain.login.dto.request.LoginRequest;
-import com.samuksa.user.domain.login.dto.response.UserJwtTokenResponse;
-import com.samuksa.user.domain.login.service.LoginService;
+import com.samuksa.user.security.basic.handler.JsonAuthenticationSuccessHandler;
+import com.samuksa.user.security.basic.manager.UserAuthenticationManager;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,38 +34,16 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
             HTTP_METHOD);
-
-    private final JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private UserJwtTokenRepository userJwtTokenRepository;
-    @Autowired
-    private CustUserRepository custUserRepository;
-    @Autowired
-    UserAuthenticationManager userAuthenticationManager;
+    private final UserAuthenticationManager userAuthenticationManager;
 
     @Autowired
-    public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider
+    public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager,
+                                                    UserAuthenticationManager userAuthenticationManager, JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler
     ) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
         this.objectMapper = objectMapper;
-        this.jwtTokenProvider = jwtTokenProvider;
-        super.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                response.setContentType("application/json");
-                response.setCharacterEncoding("utf-8");
-
-                UserJwtToken userJwtToken = UserJwtToken.builder()
-                        .userJwtAccessToken(jwtTokenProvider.createToken(authentication.getName(), authentication.getAuthorities()))
-                        .userJwtRefreshToken(jwtTokenProvider.createRefreshToken(authentication.getName(), authentication.getAuthorities()))
-                        .build();
-
-                response.addHeader("Refresh-Token", userJwtToken.getUserJwtRefreshToken());
-                response.addHeader("Access-Token", userJwtToken.getUserJwtAccessToken());
-//                userJwtTokenRepository.save(userJwtToken);
-            }
-        });
+        this.userAuthenticationManager = userAuthenticationManager;
+        super.setAuthenticationSuccessHandler(jsonAuthenticationSuccessHandler);
     }
 
 
@@ -96,7 +64,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
-        System.out.println("   " + userAuthenticationManager.authenticate(authRequest).getName());
         return userAuthenticationManager.authenticate(authRequest);//getAuthenticationManager를 커스텀해줌
     }
 
@@ -104,7 +71,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
-
 
     @Data
     private static class LoginDto {
