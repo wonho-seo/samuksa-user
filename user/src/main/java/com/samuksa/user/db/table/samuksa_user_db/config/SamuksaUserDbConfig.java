@@ -1,4 +1,4 @@
-package com.samuksa.user.config.mybatis.datasource;
+package com.samuksa.user.db.table.samuksa_user_db.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

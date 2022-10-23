@@ -1,4 +1,4 @@
-package com.samuksa.user.config;
+package com.samuksa.user.domain.singup.email.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

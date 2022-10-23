@@ -1,0 +1,32 @@
+() - 낮을수록 높은 중요도
+
+SwaggerConfig
+ (2) spring security에서 사용하는 로그인 api는 아직 제공하지 못함
+  -로그인이 service단에서 진행되는것이 아니기 때문에 따로 설정할 필요성이 있어보임
+
+spring security
+ (1) 현재 대부분의 서비스는 securityContentHolder를 제대로 사용하고 있지않음
+ 특히 유저를 찾기위해 db에 2번 접속
+  - security 에 사용하는 UserDetail을 만들고 따로 db에서 사용하는 CustUser를 따로 사용하기때문
+    통합하여 cost를 줄이고 관리해야함
+
+  (1) 현재 access 토큰과 refresh토큰이 헤더에 함께 담겨서 보내주고있음
+  헤더에만 다 보내게되면 xss에 취약하다 따라서 cookie또한 사용하는게 best
+  따라서 access는 헤더에 refresh는 cookie로 보내어 보안성을 높힌다
+  단 프론트에서도 작업해야하니 같이 작업을 시작할것
+
+  (3) 현재 jwt토큰을 전부 보내고 있음. 전부 보내면 jwt가 어디서든 해석 가능해져
+  유저의 개인정보가 노출됨
+  따라서 헤더를 제거하고 payload, 혹은 payload 와 signature 만 보내어 보안성을 높힌다
+  이에따라 db를 바꾸어 헤더 혹은 헤더 payload, signature를 따로 저장한다.
+  이부분은 프론트에 큰 영향이 없을것으로 예상되어 중요도는 낮다
+
+  (3) 현재 access token과 refresh token 에서 공통으로 사용하고 있는것이 많다
+  ex) secreteKey
+  따로 provider를 구분하여 각각 구현할 예정
+  이부분은 프론트에 큰 영향이 없을것으로 예상되어 중요도는 낮다
+
+  (1) 현재 postman을 통한 이미지 업로드는 잘되나 프론트에서 브라우저 환경에서 이미지 업로드는 잘 되지않는다
+  들어 오는 값을 못읽는 것으로 예상 같이 작업하여 해결해야 할것으로 보임
+  게시판의 이미지추가는 이부분이 해결된다음 추가 예정
+
