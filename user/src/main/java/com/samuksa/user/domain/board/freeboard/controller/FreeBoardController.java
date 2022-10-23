@@ -18,16 +18,16 @@ public class FreeBoardController {
     public ResponseEntity<?> getTitle(final @RequestBody GetTitleRequest getTitleRequest){
         return freeBoardService.getTitle(getTitleRequest);
     }
-    @PostMapping("/create/board")
+    @PostMapping("/create")
     public ResponseEntity<?> createBoard(final @RequestBody BoardCreateRequest boardCreateRequest){
         return freeBoardService.createBoard(boardCreateRequest);
     }
-    @PatchMapping("/create/board")
+    @PatchMapping("/create")
     public ResponseEntity<String> patchBoard(final @RequestBody PatchBoardRequest patchBoardRequest){
         return freeBoardService.patchTitle(patchBoardRequest);
     }
-    @DeleteMapping("/create/board")
-    public ResponseEntity<String> deleteBaord(final @RequestBody long titleIdx){
+    @DeleteMapping("/create")
+    public ResponseEntity<String> deleteBoard(final @RequestBody long titleIdx){
         return freeBoardService.deleteTitle(titleIdx);
     }
     @GetMapping("/contents")
@@ -36,7 +36,7 @@ public class FreeBoardController {
     }
     @PostMapping("/create/comments")
     public ResponseEntity<String> createComment(final @RequestBody CommentCreateRequest commentCreateRequest){
-        return freeBoardService.creatComments(commentCreateRequest);
+        return freeBoardService.createComments(commentCreateRequest);
     }
     @PatchMapping("/create/comments")
     public ResponseEntity<String> patchComment(final @RequestBody PatchCommentRequest patchCommentRequest){

@@ -13,8 +13,6 @@ import com.samuksa.user.domain.board.freeboard.dto.request.*;
 import com.samuksa.user.domain.board.freeboard.dto.response.GetCommentsResponse;
 import com.samuksa.user.domain.board.freeboard.dto.response.GetTitleResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.javassist.NotFoundException;
-import org.apache.ibatis.javassist.tools.web.BadHttpRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -48,14 +47,14 @@ public class FreeBoardService {
         boardTitle = boardTitleRepository.saveAndFlush(boardTitle);
         BoardContents boardContents = BoardContents.builder()
                 .boardTitle(boardTitle)
-                .contents(boardCreateRequest.getText())
+                .contents(boardCreateRequest.getContent())
                 .build();
         boardContentsRepository.save(boardContents);
         return ResponseEntity.ok("create");
     }
 
     public ResponseEntity<String> patchTitle(PatchBoardRequest patchBoardRequest) {
-        BoardTitle boardTitle = boardTitleRepository.findById(patchBoardRequest.getTitleIdx()).orElseThrow(() -> new EntityNotFoundException());
+        BoardTitle boardTitle = boardTitleRepository.findById(patchBoardRequest.getTitleIdx()).orElseThrow(EntityNotFoundException::new);
         CustUser custUser = custUserRepository.findByuserId(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new UsernameNotFoundException("Not Found User"));
         if (custUser.getUserIdx() != boardTitle.getUserIdx())
             return ResponseEntity.badRequest().body("Not Your Board");
@@ -63,7 +62,7 @@ public class FreeBoardService {
             boardTitle.setTitle(patchBoardRequest.getTitle());
         }
         if (patchBoardRequest.getText() != null) {
-            BoardContents boardContents = boardContentsRepository.findByBoardTitleIdx(patchBoardRequest.getTitleIdx()).orElseThrow(() -> new EntityNotFoundException());
+            BoardContents boardContents = boardContentsRepository.findByBoardTitleIdx(patchBoardRequest.getTitleIdx()).orElseThrow(EntityNotFoundException::new);
             boardContents.setContents(patchBoardRequest.getText());
             boardContentsRepository.save(boardContents);
         }
@@ -73,16 +72,24 @@ public class FreeBoardService {
     }
 
     public ResponseEntity<?> getTitle(GetTitleRequest getTitleRequest){
-        Pageable pageable = PageRequest.of(getTitleRequest.getPage(), getTitleRequest.getSize(), Sort.by(Sort.Direction.DESC, "cTime"));
-        Page<BoardTitle> page = boardTitleRepository.findByType(getTitleRequest.getType(), pageable).orElseThrow(() -> new EntityNotFoundException());
 
-        GetTitleResponse getTitleResponse = new GetTitleResponse(page, custUserRepository);
-        return ResponseEntity.ok(getTitleResponse);
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        Pageable pageable = PageRequest.of(getTitleRequest.getPage(), getTitleRequest.getSize(), Sort.by(Sort.Direction.DESC, "cTime"));
+        Page<GetTitleResponse> page = boardTitleRepository.findByType(getTitleRequest.getType(), pageable).orElseThrow(EntityNotFoundException::new).map(
+                new Function<BoardTitle, GetTitleResponse>() {
+                    @Override
+                    public GetTitleResponse apply(BoardTitle boardTitle) {
+                        return new GetTitleResponse(boardTitle, custUserRepository);
+                    }
+                }
+        );
+
+        return ResponseEntity.ok(page);
     }
 
     public ResponseEntity<String> deleteTitle(long titleIdx){
-        BoardTitle boardTitle = boardTitleRepository.findById(titleIdx).orElseThrow(() -> new EntityNotFoundException());
-        CustUser custUser = custUserRepository.findByuserId(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new EntityNotFoundException());
+        BoardTitle boardTitle = boardTitleRepository.findById(titleIdx).orElseThrow(EntityNotFoundException::new);
+        CustUser custUser = custUserRepository.findByuserId(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(EntityNotFoundException::new);
         if (boardTitle.getUserIdx() != custUser.getUserIdx())
             return ResponseEntity.badRequest().body("Not Your Board");
         boardContentsRepository.deleteByBoardTitleIdx(titleIdx);
@@ -91,11 +98,11 @@ public class FreeBoardService {
         return ResponseEntity.ok("success");
     }
     public ResponseEntity<?> getContents(long idx){
-        BoardContents boardContents = boardContentsRepository.findByBoardTitleIdx(idx).orElseThrow(()->new EntityNotFoundException());
+        BoardContents boardContents = boardContentsRepository.findByBoardTitleIdx(idx).orElseThrow(EntityNotFoundException::new);
         return ResponseEntity.ok(boardContents.getContents());
     }
 
-    public ResponseEntity<String> creatComments(CommentCreateRequest commentCreateRequest){
+    public ResponseEntity<String> createComments(CommentCreateRequest commentCreateRequest){
         if (!boardCommentRepository.existsById(commentCreateRequest.getCommendIdx()) || boardTitleRepository.existsById(commentCreateRequest.getTitleIdx()))
             return ResponseEntity.badRequest().body("nonValid idx");
         BoardComment boardComment = BoardComment.builder()
@@ -110,7 +117,7 @@ public class FreeBoardService {
     }
 
     public ResponseEntity<String> patchComment(PatchCommentRequest patchCommentRequest){
-        BoardComment boardComment = boardCommentRepository.findById(patchCommentRequest.getCommentIdx()).orElseThrow(() -> new EntityNotFoundException());
+        BoardComment boardComment = boardCommentRepository.findById(patchCommentRequest.getCommentIdx()).orElseThrow(EntityNotFoundException::new);
         CustUser custUser = custUserRepository.findByuserId(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new UsernameNotFoundException("user not found"));
         if (boardComment.getUserIdx() != custUser.getUserIdx())
             return ResponseEntity.badRequest().body("Not User's Board");
@@ -121,7 +128,7 @@ public class FreeBoardService {
     }
     public ResponseEntity<GetCommentsResponse> getComments(GetCommentsRequest getCommentsRequest){
         Pageable pageable = PageRequest.of(getCommentsRequest.getPage(), getCommentsRequest.getSize(), Sort.by("comment_idx"));
-        Page<BoardComment> page = boardCommentRepository.findByBoardTitleIdx(getCommentsRequest.getBoardTitleIdx(), pageable).orElseThrow(() -> new EntityNotFoundException());
+        Page<BoardComment> page = boardCommentRepository.findByBoardTitleIdx(getCommentsRequest.getBoardTitleIdx(), pageable).orElseThrow(EntityNotFoundException::new);
 
         GetCommentsResponse getCommentsResponse = new GetCommentsResponse(page, custUserRepository);
         return ResponseEntity.ok(getCommentsResponse);

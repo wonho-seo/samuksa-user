@@ -28,9 +28,8 @@ public class UserSignupServiceImpl {
     private final EmailServiceImpl emailService;
     @Value("${image.upload.path}")
     private String uploadPath;
-    @Value(("${image.default.path}"))
-    private String defaultPath;
-
+    @Value("${image.show.path}")
+    private String showPath;
     public void existence(SignupRequest signupRequest){
         if (signupRequest.getUserId() == null && signupRequest.getEmail() == null
                 && signupRequest.getNickName() == null)
@@ -54,9 +53,8 @@ public class UserSignupServiceImpl {
                 .nickName(signupRequest.getNickName())
                 .authentication("ROLE_USER")
                 .userPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()))
-                .profileImagePath(defaultPath + File.separator + "defaultprofileimage.png")
+                .profileImagePath(showPath + "defaultprofileimage.png")
                 .build();
-        makeFolder(custUser.getUserId());
         custUserRepository.save(custUser);
     }
 
@@ -68,11 +66,5 @@ public class UserSignupServiceImpl {
         return ResponseEntity.status(200).body("success");
     }
 
-    private void makeFolder(String userId) {
-        File uploadPathFolder = new File(uploadPath, userId);
-        String defaultImage = uploadPath + File.separator + userId + File.separator + "defaultprofileimage.png";
-        if (uploadPathFolder.exists() == false)
-            uploadPathFolder.mkdirs();
-        return;
-    }
+
 }
