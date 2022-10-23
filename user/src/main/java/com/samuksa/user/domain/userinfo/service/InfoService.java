@@ -30,15 +30,11 @@ public class InfoService {
     private final InfoMapper infoMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustUserRepository custUserRepository;
-    private final UserJwtTokenRepository userJwtTokenRepository;
-    @Value("${image.upload.path}")
-    private String uploadPath;
-    @Value("${image.default.path}")
-    private String defaultPath;
+
 
     public void deleteUserInfo(UserInfoRequest userInfoRequest){
         CustUser custUser = custUserRepository.findByuserId(userInfoRequest.getUserId()).orElseThrow(() -> new UsernameNotFoundException("not found user"));
-        checkVaildUser(userInfoRequest, custUser);
+        checkValidUser(userInfoRequest, custUser);
         infoMapper.deleteUserInfo(custUser.getUserId());
     }
 
@@ -46,17 +42,14 @@ public class InfoService {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         CustUser custUser = custUserRepository.findByuserId(userId).orElseThrow(() -> new UsernameNotFoundException("not found user"));
         File file = new File(custUser.getProfileImagePath());
-        try {
-            return GetUserInfoResponse.builder()
-                    .userId(custUser.getUserId())
-                    .email(custUser.getEmail())
-                    .nickName(custUser.getNickName())
-                    .profileImage(FileUtil.readAsByteArray(file))
-                    .build();
-        }
-        catch (IOException e){
-            return null;
-        }
+
+        return GetUserInfoResponse.builder()
+                .userId(custUser.getUserId())
+                .email(custUser.getEmail())
+                .nickName(custUser.getNickName())
+                .profileImage(custUser.getProfileImagePath())
+                .build();
+
     }
 
     public ResponseEntity<String> patchUserInfo(UserInfoRequest userInfoRequest){
@@ -71,38 +64,7 @@ public class InfoService {
         return ResponseEntity.ok("success");
     }
 
-    public ResponseEntity<String> uploadImage(MultipartFile image){
-        if (image.getContentType().startsWith("image") == false)
-            return ResponseEntity.badRequest().body("이미지가 아님");
-        String originName = image.getOriginalFilename();
-        String fileName = originName.substring(originName.lastIndexOf("."));
-        String userId = makeFolder();
-        String saveName = uploadPath + File.separator + userId + File.separator + "profile" + fileName;
-        Path savePath = Paths.get(saveName);
-        try {
-            image.transferTo(savePath);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body("IOException");
-        }
-
-        CustUser custUser = custUserRepository.findByuserId(userId).orElseThrow(() -> new UsernameNotFoundException("not found user"));
-        if (custUser.getProfileImagePath() != null)
-            new File(custUser.getProfileImagePath()).delete();
-        custUser.setProfileImagePath(saveName);
-        custUserRepository.save(custUser);
-
-        return ResponseEntity.ok("success");
-    }
-
-    private String makeFolder() {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        File uploadPatheFolder = new File(uploadPath, userId);
-        if (uploadPatheFolder.exists() == false)
-            uploadPatheFolder.mkdirs();
-
-        return userId;
-    }
-    private void checkVaildUser(UserInfoRequest userInfoRequest, CustUser custUser){
+    private void checkValidUser(UserInfoRequest userInfoRequest, CustUser custUser){
         if (custUser == null)
             throw new DbException("No Id", DbErrorCode.ID_REGISTERED);
         if (userInfoRequest != null && !bCryptPasswordEncoder.matches(userInfoRequest.getPassword(), custUser.getUserPassword()))

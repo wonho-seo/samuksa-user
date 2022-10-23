@@ -9,6 +9,7 @@ public interface UserJwtTokenRepository extends JpaRepository<UserJwtToken, Long
     Optional<UserJwtToken> findByCustUser_userId(String userId);
     Optional<UserJwtToken> findByuserJwtRefreshToken(String jwtRetreshToken);
     Optional<UserJwtToken> findByuserJwtAccessToken(String jwtAccessToken);
-
     boolean existsByuserJwtAccessToken(String jwtAccessToken);
+
+    boolean existsByuserJwtRefreshToken(String jwtRefreshToken);
 }

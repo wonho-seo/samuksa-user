@@ -6,6 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 public class BoardCreateRequest {
     private String title;
-    private String text;
+    private String content;
     private int type;
 }

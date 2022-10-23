@@ -1,6 +1,7 @@
 package com.samuksa.user.security;
 
 import com.samuksa.user.security.basic.filter.JsonUsernamePasswordAuthenticationFilter;
+import com.samuksa.user.security.exception.SecurityExceptionFilter;
 import com.samuksa.user.security.jwt.filter.JwtAuthenticationFilter;
 import com.samuksa.user.security.jwt.exception.JwtAuthenticationEntryPoint;
 import com.samuksa.user.security.oauth2.service.CustomOAuth2UserService;
@@ -24,6 +25,7 @@ public class WebSecurityConfig {
     private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SecurityExceptionFilter securityExceptionFilter;
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui",
@@ -40,7 +42,7 @@ public class WebSecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/**").permitAll()
-                .antMatchers( "/login").permitAll()
+                .antMatchers( "/login","/signup/*").permitAll()
                 .antMatchers("/user/*","/board/create").hasRole("USER")
                 .and()
                     .csrf().disable()
@@ -71,9 +73,10 @@ public class WebSecurityConfig {
 
         ;
         http
+                .addFilterBefore(securityExceptionFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        ;
+                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

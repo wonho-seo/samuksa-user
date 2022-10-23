@@ -11,5 +11,5 @@ public class GetUserInfoResponse {
     private String userId;
     private String email;
     private String nickName;
-    private byte[] profileImage;
+    private String profileImage;
 }
