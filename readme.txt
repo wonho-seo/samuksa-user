@@ -14,4 +14,3 @@ spring security를 통해 유저를 관리한다
 http://localhost:8081/oauth2/authorization/kakao
 
 을 통해 jwt토큰을 발급, 발급한 jwt토큰을 통해 로그인이 필요한 api를 제어
-
