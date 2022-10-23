@@ -2,6 +2,8 @@ samuksa 의 유저관리 와 게시판 기반 api
 
 spring security를 통해 유저를 관리한다
 
+프로젝트는 DDD(Domain Driven Design)을 목표로 설계
+
 로그인 방식은 
 1.post와 json을 통한 로그인,
 {

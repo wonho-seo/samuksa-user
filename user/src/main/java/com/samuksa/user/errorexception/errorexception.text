@@ -1,0 +1,7 @@
+exception handling 을 통항 exception 관리
+
+방식은
+ -에러코드를 enum으로 정리
+ -응답 클래스 작성
+ -전역으로 처리할 handler 작성
+을 통해 exception을 관리한다.

@@ -1,4 +1,4 @@
-package com.samuksa.user.domain.singup.service.email;
+package com.samuksa.user.domain.singup.email.service.email;
 
 import com.samuksa.user.db.table.samuksa_user_db.entity.AuthEmail;
 import com.samuksa.user.db.table.samuksa_user_db.repository.AuthEmailRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.validation.ConstraintViolationException;
 import java.util.Random;
 
 @Service

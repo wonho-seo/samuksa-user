@@ -73,7 +73,6 @@ public class FreeBoardService {
 
     public ResponseEntity<?> getTitle(GetTitleRequest getTitleRequest){
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         Pageable pageable = PageRequest.of(getTitleRequest.getPage(), getTitleRequest.getSize(), Sort.by(Sort.Direction.DESC, "cTime"));
         Page<GetTitleResponse> page = boardTitleRepository.findByType(getTitleRequest.getType(), pageable).orElseThrow(EntityNotFoundException::new).map(
                 new Function<BoardTitle, GetTitleResponse>() {

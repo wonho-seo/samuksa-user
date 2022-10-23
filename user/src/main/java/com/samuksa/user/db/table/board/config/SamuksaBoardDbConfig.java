@@ -1,4 +1,4 @@
-package com.samuksa.user.config.mybatis.datasource;
+package com.samuksa.user.db.table.board.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,18 +31,6 @@ public class SamuksaBoardDbConfig {
     @ConfigurationProperties(prefix = "spring.samuksa-board-db-datasource")
     public DataSource samuksaUserDbDataSource() { return DataSourceBuilder.create().build(); }
 
-//    @Bean(name = "BoardSqlSessionFactory")
-//    public SqlSessionFactory SqlSessionFactory(@Qualifier("SamuksaUserDbDataSource") DataSource dataSource) throws Exception {
-//        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-//        sqlSessionFactoryBean.setDataSource(dataSource);
-//        sqlSessionFactoryBean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:config/mybatis-config.xml"));
-//        return sqlSessionFactoryBean.getObject();
-//    }
-//
-//    @Bean(name = "BoardSessionTemplate")
-//    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("BoardSqlSessionFactory") SqlSessionFactory sqlSessionFactory){
-//        return new SqlSessionTemplate(sqlSessionFactory);
-//    }
 
     @Bean(name = "SamuksaBoardEntityFactoryBean")
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier("SamuksaBoardDbDataSource") DataSource dataSource){

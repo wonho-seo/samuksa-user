@@ -1,0 +1,15 @@
+spring security
+
+로그인 방식은
+1.post + json
+2.oauth2
+이를 통해 access-token 과 refresh-token 을 발급하여 token을 통한 로그인을 유지
+
+현재 방식은 기간이 짧은 access-token만 보내다가 만료되면 기간이 긴 refresh-token을 보내 재발급된다
+이때 refresh 토큰 또한 다시 발급하여 일회성으로 사용한다
+또한 access 와 refresh가 노출되어 사용하지 않아야될것을 고려해 db에 각각 저장하여
+사용할수 있는 토큰을 조절한다
+ - 단 기존 로그인 방식에 jwt 토큰 해석또한 들어감으로 cost는 늘어남
+
+기존에 사용중이던 exception handler를 통한 제어가 service단에서만 작동하여
+따로 exception을 구현하여 관리

@@ -5,7 +5,7 @@ import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
 import com.samuksa.user.db.table.samuksa_user_db.repository.AuthEmailRepository;
 import com.samuksa.user.db.table.samuksa_user_db.repository.CustUserRepository;
 import com.samuksa.user.domain.singup.dto.request.SignupRequest;
-import com.samuksa.user.domain.singup.service.email.EmailServiceImpl;
+import com.samuksa.user.domain.singup.email.service.email.EmailServiceImpl;
 import com.samuksa.user.errorexception.entity.errorHandler.email.EmailErrorCode;
 import com.samuksa.user.errorexception.entity.errorHandler.email.EmailException;
 import com.samuksa.user.errorexception.entity.errorHandler.signup.SignupErrorCode;
@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 
 @Service
 @RequiredArgsConstructor
