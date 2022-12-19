@@ -3,6 +3,7 @@ package com.samuksa.user.db.table.samuksa_user_db.entity;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.Collections;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "cust_user", schema = "samuksa_user_db")
-public class CustUser {
+public class CustUser{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class JsonAuthenticationSuccessHandler implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        if (authentication.getPrincipal() == null) //anonymous 이면 토큰 미발급
+        if (authentication.getAuthorities() == null) //anonymous 이면 토큰 미발급
             return;
 
         response.setContentType("application/json");
@@ -39,8 +40,13 @@ public class JsonAuthenticationSuccessHandler implements AuthenticationSuccessHa
         userJwtToken.setUserJwtRefreshToken(jwtTokenProvider.createRefreshToken(authentication.getName(), authentication.getAuthorities()));
         userJwtToken.setUserJwtAccessToken(jwtTokenProvider.createToken(authentication.getName(), authentication.getAuthorities()));
 
-        response.addHeader("Refresh-Token", userJwtToken.getUserJwtRefreshToken());
         response.addHeader("Access-Token", userJwtToken.getUserJwtAccessToken());
+
+        Cookie cookie = new Cookie("Refresh-Token", userJwtToken.getUserJwtRefreshToken());
+        cookie.setPath("/");
+        cookie.setMaxAge(14 * 24 * 60 * 60);
+
+        response.addCookie(cookie);
         userJwtTokenRepository.save(userJwtToken);
     }
 }

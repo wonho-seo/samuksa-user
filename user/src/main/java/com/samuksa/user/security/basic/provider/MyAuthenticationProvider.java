@@ -15,18 +15,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class MyAuthenticationProvider implements AuthenticationProvider {
-        private final UserService userService;
+    private final UserService userService;
 
-        @Override
-        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-            String loginId = authentication.getName();
-            String password = (String) authentication.getCredentials();
-            UserDetails customUserDetails = userService.loadUserByUsername(loginId);
-            if (isNotMatches(password, customUserDetails.getPassword())) {
-                throw new BadCredentialsException(loginId);
-            }
-            return new UsernamePasswordAuthenticationToken(customUserDetails, customUserDetails.getPassword(), customUserDetails.getAuthorities());
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String loginId = authentication.getName();
+        String password = (String) authentication.getCredentials();
+        UserDetails customUserDetails = userService.loadUserByUsername(loginId);
+        if (isNotMatches(password, customUserDetails.getPassword())) {
+            throw new BadCredentialsException(loginId);
         }
+        return new UsernamePasswordAuthenticationToken(customUserDetails, customUserDetails.getPassword(), customUserDetails.getAuthorities());
+    }
 
     @Override
     public boolean supports(Class<?> authentication) {
@@ -38,7 +38,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
