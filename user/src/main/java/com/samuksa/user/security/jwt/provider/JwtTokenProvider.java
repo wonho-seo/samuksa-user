@@ -1,5 +1,6 @@
 package com.samuksa.user.security.jwt.provider;
 
+import com.samuksa.user.db.table.samuksa_user_db.entity.UserJwtToken;
 import com.samuksa.user.db.table.samuksa_user_db.repository.UserJwtTokenRepository;
 import com.samuksa.user.security.basic.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +29,7 @@ public class JwtTokenProvider {
     @Value("spring.jwt.secret")
     private  String SECRET_KEY;
 
-    private final long  tokenValidMilisecond = 1000L * 60 * 30; //30분
+    private final long  tokenValidMilisecond = 1000L * 20; //30분
 
     private final long  refreshTokenTime = 1000L * 60 * 60 * 24 * 14; // 14일
 
@@ -65,7 +67,8 @@ public class JwtTokenProvider {
                 ;
     }
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userService.loadUserByUsername(this.getUserPk(token));
+        UserJwtToken userJwtToken = userJwtTokenRepository.findByuserJwtAccessToken(token).orElseThrow(() -> new UsernameNotFoundException("non user"));
+        UserDetails userDetails = userService.loadUserByUsername(userJwtToken.getCustUser().getUserId());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -82,13 +85,13 @@ public class JwtTokenProvider {
         if (jwtToken == null || !userJwtTokenRepository.existsByuserJwtAccessToken(jwtToken))
             return false;
         Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken);
-        return claims.getBody().getExpiration().before(new Date());
+        return !claims.getBody().getExpiration().before(new Date());
     }
 
     public boolean validateRefreshToken(String refreshToken) throws IOException{
         if (refreshToken == null || !userJwtTokenRepository.existsByuserJwtRefreshToken(refreshToken))
             return false;
         Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(refreshToken);
-        return claims.getBody().getExpiration().before(new Date());
+        return !claims.getBody().getExpiration().before(new Date());
     }
 }

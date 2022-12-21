@@ -73,9 +73,8 @@ public class WebSecurityConfig {
 
         ;
         http
-                .addFilterBefore(securityExceptionFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(securityExceptionFilter, UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

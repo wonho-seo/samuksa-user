@@ -1,15 +1,11 @@
 package com.samuksa.user.domain.login.service;
 
 
-import com.samuksa.user.security.jwt.provider.JwtTokenProvider;
 import com.samuksa.user.db.table.samuksa_user_db.entity.CustUser;
 import com.samuksa.user.db.table.samuksa_user_db.entity.UserJwtToken;
 import com.samuksa.user.db.table.samuksa_user_db.repository.CustUserRepository;
 import com.samuksa.user.db.table.samuksa_user_db.repository.UserJwtTokenRepository;
-import com.samuksa.user.domain.login.dto.request.LoginRequest;
-import com.samuksa.user.domain.login.dto.response.UserJwtTokenResponse;
-import com.samuksa.user.errorexception.entity.errorHandler.jwt.CustomJwtException;
-import com.samuksa.user.errorexception.entity.errorHandler.jwt.JwtErrorCode;
+import com.samuksa.user.security.jwt.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;

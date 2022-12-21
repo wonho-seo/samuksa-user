@@ -15,8 +15,8 @@ public class FreeBoardController {
     private final FreeBoardService freeBoardService;
 
     @GetMapping
-    public ResponseEntity<?> getTitle(final GetTitleRequest getTitleRequest){
-       System.out.println(getTitleRequest.getPage());
+    public ResponseEntity<?> getTitle(final int page, final int size, final int type){
+        GetTitleRequest getTitleRequest = new GetTitleRequest(page, size, type);
         return freeBoardService.getTitle(getTitleRequest);
     }
     @PostMapping("/create")
@@ -44,7 +44,8 @@ public class FreeBoardController {
         return freeBoardService.patchComment(patchCommentRequest);
     }
     @GetMapping("/comments")
-    public ResponseEntity<GetCommentsResponse> getComment(final GetCommentsRequest getCommentsRequest){
+    public ResponseEntity<GetCommentsResponse> getComment(final int boardTitleIdx, final int page, final int size){
+        GetCommentsRequest getCommentsRequest = new GetCommentsRequest(boardTitleIdx, page, size);
         return freeBoardService.getComments(getCommentsRequest);
     }
     @DeleteMapping("/comments")
